@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.myproject.catchtable.mapper.CouponMapper">
+
+    <!-- Coupon 결과 매핑 -->
+    <resultMap id="CouponResultMap" type="Coupon">
+        <id property="couponId" column="coupon_id"/>
+        <result property="name" column="name"/>
+        <result property="description" column="description"/>
+        <result property="discountAmount" column="discount_amount"/>
+        <result property="minOrderAmount" column="min_order_amount"/>
+        <result property="requiredReservationCount" column="required_reservation_count"/>
+        <result property="startDate" column="start_date"/>
+        <result property="endDate" column="end_date"/>
+        <result property="usageLimit" column="usage_limit"/>
+        <result property="createdAt" column="created_at"/>
+    </resultMap>
+
+    <!-- ID로 쿠폰 조회 -->
+    <select id="findById" parameterType="Integer" resultMap="CouponResultMap">
+        SELECT 
+            coupon_id,
+            name,
+            description,
+            discount_amount,
+            min_order_amount,
+            required_reservation_count,
+            start_date,
+            end_date,
+            usage_limit,
+            created_at
+        FROM coupons
+        WHERE coupon_id = #{couponId}
+    </select>
+
+    <!-- 쿠폰명으로 조회 -->
+    <select id="findByName" parameterType="String" resultMap="CouponResultMap">
+        SELECT 
+            coupon_id,
+            name,
+            description,
+            discount_amount,
+            min_order_amount,
+            required_reservation_count,
+            start_date,
+            end_date,
+            usage_limit,
+            created_at
+        FROM coupons
+        WHERE name = #{name}
+        LIMIT 1
+    </select>
+
+    <!-- 모든 쿠폰 조회 -->
+    <select id="findAll" resultMap="CouponResultMap">
+        SELECT 
+            coupon_id,
+            name,
+            description,
+            discount_amount,
+            min_order_amount,
+            required_reservation_count,
+            start_date,
+            end_date,
+            usage_limit,
+            created_at
+        FROM coupons
+        ORDER BY created_at DESC
+    </select>
+
+    <!-- 활성 쿠폰 조회 -->
+    <select id="findActiveCoupons" resultMap="CouponResultMap">
+        SELECT 
+            coupon_id,
+            name,
+            description,
+            discount_amount,
+            min_order_amount,
+            required_reservation_count,
+            start_date,
+            end_date,
+            usage_limit,
+            created_at
+        FROM coupons
+        WHERE end_date IS NULL OR end_date >= CURDATE()
+        ORDER BY created_at DESC
+    </select>
+
+    <!-- 쿠폰 생성 -->
+    <insert id="insertCoupon" parameterType="Coupon" useGeneratedKeys="true" keyProperty="couponId">
+        INSERT INTO coupons (
+            name,
+            description,
+            discount_amount,
+            min_order_amount,
+            required_reservation_count,
+            start_date,
+            end_date,
+            usage_limit
+        ) VALUES (
+            #{name},
+            #{description},
+            #{discountAmount},
+            #{minOrderAmount},
+            IFNULL(#{requiredReservationCount}, 0),
+            IFNULL(#{startDate}, CURDATE()),
+            #{endDate},
+            IFNULL(#{usageLimit}, 1000)
+        )
+    </insert>
+
+    <!-- 쿠폰 수정 -->
+    <update id="updateCoupon" parameterType="Coupon">
+        UPDATE coupons 
+        SET 
+            name = #{name},
+            description = #{description},
+            discount_amount = #{discountAmount},
+            min_order_amount = #{minOrderAmount},
+            required_reservation_count = #{requiredReservationCount},
+            start_date = #{startDate},
+            end_date = #{endDate},
+            usage_limit = #{usageLimit}
+        WHERE coupon_id = #{couponId}
+    </update>
+
+    <!-- 쿠폰 삭제 -->
+    <delete id="deleteCoupon" parameterType="Integer">
+        DELETE FROM coupons 
+        WHERE coupon_id = #{couponId}
+    </delete>
+
+    <!-- 쿠폰 수 조회 -->
+    <select id="countCoupons" resultType="int">
+        SELECT COUNT(*) FROM coupons
+    </select>
+
+    <!-- 활성 쿠폰 수 조회 -->
+    <select id="countActiveCoupons" resultType="int">
+        SELECT COUNT(*) FROM coupons
+        WHERE end_date IS NULL OR end_date >= CURDATE()
+    </select>
+
+</mapper>

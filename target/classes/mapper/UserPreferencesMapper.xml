@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.myproject.catchtable.mapper.UserPreferencesMapper">
+
+    <!-- 사용자 선호도 조회 -->
+    <select id="findByUserId" parameterType="int" resultType="UserPreferences">
+        SELECT * FROM user_preferences WHERE user_id = #{userId}
+    </select>
+    
+    <!-- 사용자 선호도 등록 -->
+    <insert id="insertUserPreferences" parameterType="UserPreferences">
+        INSERT INTO user_preferences (
+            user_id, preferred_cuisine_types, preferred_price_range, preferred_area
+        ) VALUES (
+            #{userId}, #{preferredCuisineTypes}, #{preferredPriceRange}, #{preferredArea}
+        )
+    </insert>
+    
+    <!-- 사용자 선호도 수정 -->
+    <update id="updateUserPreferences" parameterType="UserPreferences">
+        UPDATE user_preferences SET
+            preferred_cuisine_types = #{preferredCuisineTypes},
+            preferred_price_range = #{preferredPriceRange},
+            preferred_area = #{preferredArea}
+        WHERE user_id = #{userId}
+    </update>
+    
+    <!-- 사용자 선호도 삭제 -->
+    <delete id="deleteUserPreferences" parameterType="int">
+        DELETE FROM user_preferences WHERE user_id = #{userId}
+    </delete>
+
+</mapper>

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.myproject.catchtable.mapper.CategoryMapper">
+
+    <!-- 카테고리 조회 -->
+    <select id="findById" parameterType="int" resultType="Category">
+        SELECT * FROM categories WHERE category_id = #{categoryId}
+    </select>
+    
+    <select id="findAll" resultType="Category">
+        SELECT * FROM categories ORDER BY category_id
+    </select>
+    
+    <select id="findByName" parameterType="string" resultType="Category">
+        SELECT * FROM categories WHERE name = #{name}
+    </select>
+    
+    <!-- 카테고리 등록 -->
+    <insert id="insertCategory" parameterType="Category" useGeneratedKeys="true" keyProperty="categoryId">
+        INSERT INTO categories (name, icon_url) 
+        VALUES (#{name}, #{iconUrl})
+    </insert>
+    
+    <!-- 카테고리 수정 -->
+    <update id="updateCategory" parameterType="Category">
+        UPDATE categories SET
+            name = #{name},
+            icon_url = #{iconUrl}
+        WHERE category_id = #{categoryId}
+    </update>
+    
+    <!-- 카테고리 삭제 -->
+    <delete id="deleteCategory" parameterType="int">
+        DELETE FROM categories WHERE category_id = #{categoryId}
+    </delete>
+    
+    <!-- 카테고리별 식당 수 조회 -->
+    <select id="countRestaurantsByCategoryId" parameterType="int" resultType="int">
+        SELECT COUNT(*) FROM restaurants WHERE category_id = #{categoryId}
+    </select>
+
+</mapper>

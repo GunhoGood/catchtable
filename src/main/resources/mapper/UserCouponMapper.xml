@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.myproject.catchtable.mapper.UserCouponMapper">
+
+    <!-- UserCoupon 결과 매핑 -->
+    <resultMap id="UserCouponResultMap" type="UserCoupon">
+        <id property="userCouponId" column="user_coupon_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="couponId" column="coupon_id"/>
+        <result property="isUsed" column="is_used"/>
+        <result property="usedAt" column="used_at"/>
+        <result property="createdAt" column="created_at"/>
+        <result property="endDate" column="end_date"/>
+        <result property="usageLimit" column="usage_limit"/>
+        
+        <!-- Coupon 정보 포함 -->
+        <result property="couponName" column="coupon_name"/>
+        <result property="couponDescription" column="coupon_description"/>
+        <result property="discountAmount" column="discount_amount"/>
+        <result property="minOrderAmount" column="min_order_amount"/>
+        <result property="startDate" column="start_date"/>
+        <result property="couponEndDate" column="coupon_end_date"/>
+    </resultMap>
+
+    <!-- ID로 사용자 쿠폰 조회 -->
+    <select id="findById" parameterType="Integer" resultMap="UserCouponResultMap">
+        SELECT 
+            uc.user_coupon_id,
+            uc.user_id,
+            uc.coupon_id,
+            uc.is_used,
+            uc.used_at,
+            uc.created_at,
+            uc.end_date,
+            uc.usage_limit,
+            c.name as coupon_name,
+            c.description as coupon_description,
+            c.discount_amount,
+            c.min_order_amount,
+            c.start_date,
+            c.end_date as coupon_end_date
+        FROM user_coupons uc
+        LEFT JOIN coupons c ON uc.coupon_id = c.coupon_id
+        WHERE uc.user_coupon_id = #{userCouponId}
+    </select>
+
+    <!-- 특정 사용자의 특정 쿠폰 조회 -->
+    <select id="findByUserIdAndCouponId" resultMap="UserCouponResultMap">
+        SELECT 
+            uc.user_coupon_id,
+            uc.user_id,
+            uc.coupon_id,
+            uc.is_used,
+            uc.used_at,
+            uc.created_at,
+            uc.end_date,
+            uc.usage_limit,
+            c.name as coupon_name,
+            c.description as coupon_description,
+            c.discount_amount,
+            c.min_order_amount,
+            c.start_date,
+            c.end_date as coupon_end_date
+        FROM user_coupons uc
+        LEFT JOIN coupons c ON uc.coupon_id = c.coupon_id
+        WHERE uc.user_id = #{userId} AND uc.coupon_id = #{couponId}
+        LIMIT 1
+    </select>
+
+    <!-- 사용자별 쿠폰 목록 조회 -->
+    <select id="findByUserId" parameterType="Integer" resultMap="UserCouponResultMap">
+        SELECT 
+            uc.user_coupon_id,
+            uc.user_id,
+            uc.coupon_id,
+            uc.is_used,
+            uc.used_at,
+            uc.created_at,
+            uc.end_date,
+            uc.usage_limit,
+            c.name as coupon_name,
+            c.description as coupon_description,
+            c.discount_amount,
+            c.min_order_amount,
+            c.start_date,
+            c.end_date as coupon_end_date
+        FROM user_coupons uc
+        LEFT JOIN coupons c ON uc.coupon_id = c.coupon_id
+        WHERE uc.user_id = #{userId}
+        ORDER BY uc.created_at DESC
+    </select>
+
+    <!-- 사용 가능한 쿠폰 목록 조회 -->
+    <select id="findAvailableByUserId" parameterType="Integer" resultMap="UserCouponResultMap">
+        SELECT 
+            uc.user_coupon_id,
+            uc.user_id,
+            uc.coupon_id,
+            uc.is_used,
+            uc.used_at,
+            uc.created_at,
+            uc.end_date,
+            uc.usage_limit,
+            c.name as coupon_name,
+            c.description as coupon_description,
+            c.discount_amount,
+            c.min_order_amount,
+            c.start_date,
+            c.end_date as coupon_end_date
+        FROM user_coupons uc
+        LEFT JOIN coupons c ON uc.coupon_id = c.coupon_id
+        WHERE uc.user_id = #{userId}
+          AND uc.is_used = false
+          AND (uc.end_date IS NULL OR uc.end_date >= CURDATE())
+          AND (c.end_date IS NULL OR c.end_date >= CURDATE())
+        ORDER BY uc.end_date ASC
+    </select>
+
+    <!-- 특정 쿠폰의 모든 사용자 쿠폰 조회 -->
+    <select id="findAllByCouponId" parameterType="Integer" resultMap="UserCouponResultMap">
+        SELECT 
+            uc.user_coupon_id,
+            uc.user_id,
+            uc.coupon_id,
+            uc.is_used,
+            uc.used_at,
+            uc.created_at,
+            uc.end_date,
+            uc.usage_limit,
+            c.name as coupon_name,
+            c.description as coupon_description,
+            c.discount_amount,
+            c.min_order_amount,
+            c.start_date,
+            c.end_date as coupon_end_date
+        FROM user_coupons uc
+        LEFT JOIN coupons c ON uc.coupon_id = c.coupon_id
+        WHERE uc.coupon_id = #{couponId}
+        ORDER BY uc.created_at DESC
+    </select>
+
+    <!-- 사용자 쿠폰 생성 -->
+    <insert id="insertUserCoupon" parameterType="UserCoupon" useGeneratedKeys="true" keyProperty="userCouponId">
+        INSERT INTO user_coupons (
+            user_id, 
+            coupon_id, 
+            is_used,
+            end_date,
+            usage_limit
+        ) VALUES (
+            #{userId}, 
+            #{couponId}, 
+            #{isUsed},
+            #{endDate},
+            #{usageLimit}
+        )
+    </insert>
+
+    <!-- 사용자 쿠폰 수정 -->
+    <update id="updateUserCoupon" parameterType="UserCoupon">
+        UPDATE user_coupons 
+        SET 
+            is_used = #{isUsed},
+            used_at = #{usedAt},
+            end_date = #{endDate},
+            usage_limit = #{usageLimit}
+        WHERE user_coupon_id = #{userCouponId}
+    </update>
+
+    <!-- 사용자 쿠폰 삭제 -->
+    <delete id="deleteUserCoupon" parameterType="Integer">
+        DELETE FROM user_coupons 
+        WHERE user_coupon_id = #{userCouponId}
+    </delete>
+
+    <!-- 특정 쿠폰의 모든 사용자 쿠폰 삭제 -->
+    <delete id="deleteByCouponId" parameterType="Integer">
+        DELETE FROM user_coupons 
+        WHERE coupon_id = #{couponId}
+    </delete>
+
+    <!-- 사용되지 않은 쿠폰만 삭제 -->
+    <delete id="deleteUnusedByCouponId" parameterType="Integer">
+        DELETE FROM user_coupons 
+        WHERE coupon_id = #{couponId} 
+          AND is_used = false
+    </delete>
+
+    <!-- 쿠폰 사용 처리 -->
+    <update id="markAsUsed" parameterType="Integer">
+        UPDATE user_coupons 
+        SET is_used = true, used_at = NOW()
+        WHERE user_coupon_id = #{userCouponId}
+    </update>
+
+    <!-- 쿠폰별 발급 수 조회 -->
+    <select id="countByCouponId" parameterType="Integer" resultType="int">
+        SELECT COUNT(*) 
+        FROM user_coupons 
+        WHERE coupon_id = #{couponId}
+    </select>
+
+    <!-- 쿠폰별 사용 수 조회 -->
+    <select id="countUsedByCouponId" parameterType="Integer" resultType="int">
+        SELECT COUNT(*) 
+        FROM user_coupons 
+        WHERE coupon_id = #{couponId} AND is_used = true
+    </select>
+
+    <!-- 쿠폰별 미사용 수 조회 -->
+    <select id="countUnusedByCouponId" parameterType="Integer" resultType="int">
+        SELECT COUNT(*) 
+        FROM user_coupons 
+        WHERE coupon_id = #{couponId} AND is_used = false
+    </select>
+
+</mapper>

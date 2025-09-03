@@ -1,0 +1,11 @@
+eclipse.preferences.version=1
+encoding//src/main/java/com/myproject/catchtable/controller/AdminController.java=UTF-8
+encoding//src/main/java/com/myproject/catchtable/controller/AuthController.java=UTF-8
+encoding//src/main/java/com/myproject/catchtable/controller/BoardController.java=UTF-8
+encoding//src/main/java/com/myproject/catchtable/mapper/UserMapper.java=UTF-8
+encoding//src/main/java/com/myproject/catchtable/model/Restaurant.java=UTF-8
+encoding//src/main/java/com/myproject/catchtable/service/CouponInitializationService.java=UTF-8
+encoding//src/main/java/com/myproject/catchtable/service/CouponService.java=UTF-8
+encoding//src/main/java/com/myproject/catchtable/service/ReservationService.java=UTF-8
+encoding//src/main/java/com/myproject/catchtable/service/RestaurantService.java=UTF-8
+encoding//src/main/webapp/WEB-INF/views/business-profile.jsp=UTF-8

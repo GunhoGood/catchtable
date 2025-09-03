@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" 
+	"http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+	<!-- MyBatis 전역 설정 -->
+	<settings>
+		<!-- 카멜케이스 자동 매핑: user_name ↔ userName -->
+		<setting name="mapUnderscoreToCamelCase" value="true"/>
+		
+		<!-- NULL 값 처리 -->
+		<setting name="jdbcTypeForNull" value="NULL"/>
+		
+		<!-- SQL 로그 출력  -->
+		<setting name="logImpl" value="STDOUT_LOGGING"/>
+		
+		<!-- 지연 로딩 활성화 -->
+		<setting name="lazyLoadingEnabled" value="true"/>
+		
+		<!-- 캐시 사용 -->
+		<setting name="cacheEnabled" value="true"/>
+	</settings>
+	
+	<!-- 타입 별칭: 긴 패키지명 대신 클래스명만 사용 -->
+	<typeAliases>
+		<!-- 개별 별칭 -->
+		<typeAlias type="com.myproject.catchtable.model.User" alias="User"/>
+		<typeAlias type="com.myproject.catchtable.model.Restaurant" alias="Restaurant"/>
+		<typeAlias type="com.myproject.catchtable.model.Review" alias="Review"/>
+		<typeAlias type="com.myproject.catchtable.model.Reservation" alias="Reservation"/>
+		<typeAlias type="com.myproject.catchtable.model.Category" alias="Category"/>
+		<typeAlias type="com.myproject.catchtable.model.Menu" alias="Menu"/>
+		<typeAlias type="com.myproject.catchtable.model.Coupon" alias="Coupon"/>
+		<typeAlias type="com.myproject.catchtable.model.UserPreferences" alias="UserPreferences"/>
+		<typeAlias type="com.myproject.catchtable.model.UserCoupon" alias="UserCoupon"/>
+		<typeAlias type="com.myproject.catchtable.model.Like" alias="Like"/> 
+		<!-- 또는 패키지 전체 스캔 (위 개별 설정 대신 사용 가능) -->
+		<!-- <package name="com.myproject.catchtable.model"/> -->
+	</typeAliases>
+	
+</configuration>
